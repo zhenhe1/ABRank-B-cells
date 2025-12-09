@@ -1,0 +1,11 @@
+# MLP regressor configuration
+# Defines the architecture of the MLP that processes concatenated pooled embeddings
+
+# Hidden layer dimensions
+# Input: 1792 (512 + 1280) -> 512 -> 256 -> 1
+hidden_dims:
+  - 512
+  - 256
+
+# Dropout probability before final output layer
+dropout: 0.2

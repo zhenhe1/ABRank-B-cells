@@ -221,7 +221,7 @@ class AbRankDataset(PygDataset):
         # e.g. idx:=0 -> "Ab-AIntibody-002---SARS-CoV-2-pairdata.pt"
         dbID, fileName, logAff = self.data_registry[idx]
         # load the graph pair
-        g = torch.load(osp.join(self.pairdata_dir, fileName))
+        g = torch.load(osp.join(self.pairdata_dir, fileName), weights_only=False)
         g.y = logAff
         return g
 

@@ -1,0 +1,10 @@
+# MLP encoder - directly uses pre-computed PLM embeddings without graph encoding
+# Only need to specify input dimensions since MLP model skips encoding
+
+# Antibody encoder config
+ab:
+  input_dim: 512  # AntiBERTy embedding dimension
+
+# Antigen encoder config
+ag:
+  input_dim: 1280  # ESM-2 embedding dimension

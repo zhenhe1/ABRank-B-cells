@@ -12,8 +12,8 @@ defaults:
   - env: default
   - hydra: default
   - dataset: AbRank-regression
-  - encoder: walle
-  - regressor: default
+  - encoder: mlp  # Use MLP encoder (no graph encoding)
+  - regressor: mlp  # Use MLP regressor config
   - optimizer: adamw
   - callbacks: default
   - scheduler: linear_warmup_cosine_decay
@@ -24,7 +24,7 @@ defaults:
 # === 3. Specify options here. Options will override defaults ===
 # Model configuration - specify which model class to instantiate
 model:
-  _target_: waffle.models.abrank_regression_gcn.RegressionGCNAbAgIntLM
+  _target_: waffle.models.abrank_regression_mlp.RegressionMLPAbAgIntLM
 
 dataset:
   datamodule:
@@ -36,18 +36,18 @@ dataset:
       perturbation: ${oc.env:DATA_PATH}/AbRank/processed/splits-regression/Split_AF3/test-perturbation-swapped.csv
 
 trainer:
-  max_epochs: 100  # NOTE: set to -1 to use indefinite sampling
-  check_val_every_n_epoch: 1  # check validation every epoch
-  gradient_clip_val: 1.0  # clip gradients
-  gradient_clip_algorithm: "norm"  # clip gradients by norm
-  accumulate_grad_batches: 1  # accumulate gradients over N batches
+  max_epochs: 100  # NOTE: set to -1 to use indefinite sampling
+  check_val_every_n_epoch: 1  # check validation every epoch
+  gradient_clip_val: 1.0  # clip gradients
+  gradient_clip_algorithm: "norm"  # clip gradients by norm
+  accumulate_grad_batches: 1  # accumulate gradients over N batches
   # dev options
   limit_train_batches: 1.0  #  set to a float <1.0 to limit training to a fraction of the dataset; or an int to limit to a number of batches
   limit_val_batches: 1.0  #  set to a float <1.0 to limit validation to a fraction of the dataset; or an int to limit to a number of batches
   limit_test_batches: 1.0  #  set to a float <1.0 to limit testing to a fraction of the dataset; or an int to limit to a number of batches
 
 optimizer:
-  lr: 1e-5  # fine-tuning pretrained model, use small learning rate
+  lr: 1e-4  # Higher LR than GCN (1e-5) since we're training from scratch, not fine-tuning
 
 task_name: train
 
@@ -64,9 +64,9 @@ callbacks:
   model_checkpoint:
     monitor: "val/mse"
     mode: "min"
-    save_top_k: 1                  # save the best model
-    save_last: True                # save the last model
-    save_on_train_epoch_end: True  # save checkpoint at the end of the training epoch
+    save_top_k: 1                  # save the best model
+    save_last: True                # save the last model
+    save_on_train_epoch_end: True  # save checkpoint at the end of the training epoch
 
   stop_on_nan:
     monitor: "train/mse"

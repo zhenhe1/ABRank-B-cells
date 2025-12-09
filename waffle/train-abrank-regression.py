@@ -24,6 +24,7 @@ from tqdm import tqdm
 import waffle.constants as constants
 from waffle import utils
 from waffle.models.abrank_regression_gcn import RegressionGCNAbAgIntLM
+from waffle.models.abrank_regression_mlp import RegressionMLPAbAgIntLM
 from waffle.utils.wandb_helper import (log_config_as_artifact,
                                        log_default_root_dir, log_run_dir,
                                        upload_ckpts_to_wandb)
@@ -241,8 +242,10 @@ def train_model(cfg: DictConfig) -> None:
     # ----------------------------------------
     # Model
     # ----------------------------------------
-    logger.info("Instantiating model...")
-    model: L.LightningModule = RegressionGCNAbAgIntLM(cfg=cfg)
+    logger.info(f"Instantiating model: <{cfg.model._target_}>...")
+    # Instantiate model class and pass the full config
+    model_class = hydra.utils.get_class(cfg.model._target_)
+    model: L.LightningModule = model_class(cfg=cfg)
 
     # ----------------------------------------
     # Model initialization
