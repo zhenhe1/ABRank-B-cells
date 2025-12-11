@@ -1,0 +1,12 @@
+# MLP regressor configuration - LARGE model
+# Larger architecture for Phase 1 improvements
+# Input: 1792 (512 + 1280) -> 1024 -> 512 -> 256 -> 1
+
+# Hidden layer dimensions
+hidden_dims:
+  - 1024
+  - 512
+  - 256
+
+# Dropout probability before final output layer
+dropout: 0.2
